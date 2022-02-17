@@ -88,7 +88,7 @@ module confreg
     output     [1 :0] led_rg1,      
     output reg [7 :0] num_csn,      
     output reg [6 :0] num_a_g,      
-    input      [7 :0] switch,       
+    input      [7 :0] switch_,       
     output     [3 :0] btn_key_col,  
     input      [3 :0] btn_key_row,  
     input      [1 :0] btn_step      
@@ -340,12 +340,12 @@ end
 //-------------------------------{switch}begin---------------------------//
 //switch data
 //switch_data[7:0]
-assign switch_data   = {24'd0,switch};
+assign switch_data   = {24'd0,switch_};
 assign sw_inter_data = {16'd0,
-                        switch[7],1'b0,switch[6],1'b0,
-                        switch[5],1'b0,switch[4],1'b0,
-                        switch[3],1'b0,switch[2],1'b0,
-                        switch[1],1'b0,switch[0],1'b0};
+                        switch_[7],1'b0,switch_[6],1'b0,
+                        switch_[5],1'b0,switch_[4],1'b0,
+                        switch_[3],1'b0,switch_[2],1'b0,
+                        switch_[1],1'b0,switch_[0],1'b0};
 //--------------------------------{switch}end----------------------------//
 
 //------------------------------{btn key}begin---------------------------//
@@ -611,7 +611,7 @@ always @ ( posedge clk )
 begin
     if ( !resetn )
     begin
-        scan_data <= 32'd0;  
+        scan_data <= 4'd0;  
         num_csn   <= 8'b1111_1111;
     end
     else

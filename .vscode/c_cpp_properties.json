@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/local/share/verilator/include"
+                
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

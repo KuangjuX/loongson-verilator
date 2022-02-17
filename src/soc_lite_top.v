@@ -73,7 +73,7 @@ module soc_lite_top #(parameter SIMULATION=1'b0)
     output [1 :0] led_rg1,
     output [7 :0] num_csn,
     output [6 :0] num_a_g,
-    input  [7 :0] switch, 
+    input  [7 :0] switch_, 
     output [3 :0] btn_key_col,
     input  [3 :0] btn_key_row,
     input  [1 :0] btn_step
@@ -222,7 +222,7 @@ confreg #(.SIMULATION(SIMULATION)) confreg
     .led_rg1     ( led_rg1    ),  // o, 2      
     .num_csn     ( num_csn    ),  // o, 8      
     .num_a_g     ( num_a_g    ),  // o, 7      
-    .switch      ( switch     ),  // i, 8     
+    .switch_      ( switch_     ),  // i, 8     
     .btn_key_col ( btn_key_col),  // o, 4          
     .btn_key_row ( btn_key_row),  // i, 4           
     .btn_step    ( btn_step   )   // i, 2   

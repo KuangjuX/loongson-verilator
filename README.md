@@ -29,4 +29,7 @@ make -j8
 sudo make install
 ```  
   
-之后即可使用 `verilator`。
+之后即可使用 `verilator`。  
+  
+## Problems
+- [x] 测试中的时序问题

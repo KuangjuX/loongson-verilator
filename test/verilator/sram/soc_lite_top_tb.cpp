@@ -2,6 +2,7 @@
 #include "verilated_vcd_c.h"
 #include "Vsoc_lite_top.h"
 #include "Vsoc_lite_top___024root.h"
+#include "clock_gen.hpp"
 #include <stdio.h>
 
 // 使用 Verialtor 仿真只验证功能的正确性而并不验证时序
@@ -23,6 +24,8 @@ void check_wb_signal(Vsoc_lite_top* cpu){
     uint32_t debug_wb_rf_wen = cpu->rootp->soc_lite_top__DOT__debug_wb_rf_wen;
     uint32_t debug_wb_rf_wnum = cpu->rootp->soc_lite_top__DOT__debug_wb_rf_wnum;
     uint32_t debug_wb_rf_wdata = cpu->rootp->soc_lite_top__DOT__debug_wb_rf_wdata;
+    uint32_t ref_wb_pc, ref_wb_rf_wnum, ref_wb_rf_wdata_v, trace_cmp_flag;
+
     // wdata[i*8+7 : i*8] is valid, only wehile wen[i] is valid
     uint32_t mask = 0;
     if(debug_wb_rf_wen & 0x1){
@@ -37,12 +40,25 @@ void check_wb_signal(Vsoc_lite_top* cpu){
     if(debug_wb_rf_wen & 0x8){
         mask |= (0xff << 24);
     }
-    uint32_t ref_wb_pc, ref_wb_rf_wnum, ref_wb_rf_wdata_v, trace_cmp_flag;
     debug_wb_rf_wdata &= mask;
     if(debug_wb_rf_wen && debug_wb_rf_wnum != 0 && !debug_end && CONFREG_OPEN_TRACE){
         trace_cmp_flag = 0;
         while(!trace_cmp_flag && !feof(trace_ref)){
             fscanf(trace_ref, "%x, %x, %x, %x", trace_cmp_flag, ref_wb_pc, ref_wb_rf_wnum, ref_wb_rf_wdata_v);
+        }
+    }
+
+    // 将信号进行比较
+    uint32_t debug_wb_err = 0;
+    if(debug_wb_rf_wen && debug_wb_rf_wnum != 0 && !debug_end && CONFREG_OPEN_TRACE){
+        if(debug_wb_pc != ref_wb_pc || debug_wb_rf_wnum != ref_wb_rf_wnum || debug_wb_rf_wdata != ref_wb_rf_wdata_v){
+            printf("----------------------------------------------------------\n");
+            printf("   reference: PC: 0x%x, wb_rf_wnum: 0x%x, wb_rf_wdata: 0x%x\n",
+            ref_wb_pc, ref_wb_rf_wnum, ref_wb_rf_wdata_v);
+            printf("   mycpu:     PC: 0x%x, wb_rf_wnum: 0x%x, wb_rf_wdata: 0x%x\n",
+            debug_wb_pc, debug_wb_rf_wnum, debug_wb_rf_wdata);
+            printf("----------------------------------------------------------\n");
+            debug_wb_err = 1;
         }
     }
 }

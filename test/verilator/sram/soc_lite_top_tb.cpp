@@ -79,7 +79,7 @@ int main(int argc, char** argv, char** env){
     int clk = 0;
     int resetn = 0;
     // gpio
-    int led, led_rg0, led_rg1, num_csn, num_a_g, switch_, btn_key_col, btn_key_row, btn_step;
+    uint32_t led, led_rg0, led_rg1, num_csn, num_a_g, switch_, btn_key_col, btn_key_row, btn_step;
     switch_ = 0xff;
     btn_key_row = 0;
     btn_step = 3;

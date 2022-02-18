@@ -134,7 +134,7 @@ begin
     end
 end
 
-//compare result in rsing edge 
+// compare result in rsing edge 
 reg debug_wb_err;
 always @(posedge soc_clk)
 begin

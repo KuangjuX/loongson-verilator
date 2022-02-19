@@ -9,7 +9,8 @@
 class Soc {
     public:
 
-    unsigned long m_cycles;
+    uint64_t m_cycles;
+    uint64_t m_sim_time;
     Vsoc_lite_top* m_soc;
     VerilatedVcdC* m_trace;
     FILE* trace_ref;
@@ -22,6 +23,7 @@ class Soc {
     Soc(const char* trace_path){
         m_soc = new Vsoc_lite_top;
         m_cycles = 0;
+        m_sim_time = 0;
         printf("[Debug] Enable wave...\n");
         Verilated::traceEverOn(true);
 
@@ -81,6 +83,21 @@ class Soc {
         uint32_t debug_wb_rf_wnum = m_soc->rootp->soc_lite_top__DOT__debug_wb_rf_wnum;
         uint32_t debug_wb_rf_wdata_v = m_soc->rootp->soc_lite_top__DOT__debug_wb_rf_wdata;
         uint32_t confreg_open_trace = m_soc->rootp->soc_lite_top__DOT__confreg__DOT__open_trace;
+        // 根据写使能对写数据加上掩码
+        uint32_t mask = 0;
+        if(debug_wb_rf_wen & 0x1){
+            mask |= 0xff;
+        }
+        if(debug_wb_rf_wen & 0x2){
+            mask |= (0xff << 8);
+        }
+        if(debug_wb_rf_wen & 0x4){
+            mask |= (0xff << 16);
+        }
+        if(debug_wb_rf_wen & 0x8){
+            mask |= (0xff << 24);
+        }
+        debug_wb_rf_wdata_v &= mask;
         if(!m_soc->resetn){
             debug_wb_err = 0;
         }else if(debug_wb_rf_wen && debug_wb_rf_wen != 0 && !debug_end && confreg_open_trace){
@@ -128,7 +145,7 @@ class Soc {
     }
 
     void single_cycle(){
-        if(m_cycles == 1000){
+        if(m_cycles == 10){
             reset();
             printf("======================================================\n");
             printf("Test begin!\n");
@@ -136,6 +153,8 @@ class Soc {
         assign_module(0xff, 0, 3);
         m_soc->clk = 0;
         m_soc->eval();
+        m_trace->dump(m_sim_time);
+        m_sim_time++;
 
         assign_module(0xff, 0, 3);
         m_soc->clk = 1;
@@ -147,7 +166,8 @@ class Soc {
         // 验证 debug 是否结束
         verify_debug_end();
 
-        m_trace->dump(m_cycles);
+        m_trace->dump(m_sim_time);
+        m_sim_time++;
         m_cycles++;
     }
 

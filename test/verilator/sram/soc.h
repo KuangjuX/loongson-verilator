@@ -133,6 +133,8 @@ class Soc {
             if(debug_wb_err){
                 printf("Fail!!!\n");
             }
+        }else if(debug_wb_err){
+            printf("Fail!!!\n");
         }
     }
 

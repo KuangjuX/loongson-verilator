@@ -27,9 +27,12 @@ setenv VERILATOR_ROOT `pwd`   # if your shell is csh
 ./configure
 make -j8
 sudo make install
-```  
+```     
+
+之后即可使用 `verilator`。   
+
+而对于 `gtkwave` 我们则可以使用 `sudo apt-get install gtkwave` 来进行安装即可。
   
-之后即可使用 `verilator`。  
   
 ## Problems
 - [ ] 测试中的时序问题

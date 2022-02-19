@@ -51,6 +51,9 @@ class Soc {
         m_trace->close();
         delete m_trace;
         m_trace = nullptr;
+        fclose(trace_ref);
+        delete trace_ref;
+        trace_ref = nullptr;
     }
 
     // 实例化模块
@@ -103,13 +106,13 @@ class Soc {
         }else if(debug_wb_rf_wen && debug_wb_rf_wen != 0 && !debug_end && confreg_open_trace){
             if((debug_wb_pc != ref_wb_pc) || (debug_wb_rf_wnum != ref_wb_rf_wnum) || (debug_wb_rf_wdata_v != ref_wb_rf_wdata_v)){
                 // 仿真错误
-                printf("---------------------------------------------------\n");
+                printf("==========================================================================================\n");
                 printf("%ld Error!!!\n", m_cycles);
                 printf("   reference: PC: 0x%x, wb_rf_wnum: 0x%x, wb_rf_wdata: 0x%x\n",
                 ref_wb_pc, ref_wb_rf_wnum, ref_wb_rf_wdata_v);
                 printf("   mycpu:     PC: 0x%x, wb_rf_wnum: 0x%x, wb_rf_wdata: 0x%x\n",
                 debug_wb_pc, debug_wb_rf_wnum, debug_wb_rf_wdata_v);
-                printf("----------------------------------------------------------\n");
+                printf("===========================================================================================\n");
                 debug_wb_err = 1;
             }
         }

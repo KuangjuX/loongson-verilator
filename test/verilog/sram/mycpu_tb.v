@@ -162,7 +162,7 @@ begin
     end
 end
 
-//monitor numeric display
+// monitor numeric display
 reg [7:0] err_count;
 wire [31:0] confreg_num_reg = `CONFREG_NUM_REG;
 reg  [31:0] confreg_num_reg_r;
@@ -197,7 +197,7 @@ begin
     end
 end
 
-//monitor test
+// monitor test
 initial
 begin
     $timeformat(-9,0," ns",10);

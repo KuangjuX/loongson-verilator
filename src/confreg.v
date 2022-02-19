@@ -156,6 +156,7 @@ module confreg
         end
     end
 
+    wire conf_we;
     //conf write, only support a word write
     assign conf_we = conf_en & (|conf_wen);
 
